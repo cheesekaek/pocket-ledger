@@ -1,6 +1,21 @@
+package com.example.pl;
+
+import jakarta.persistence.*;
 import java.time.LocalDate;
 
+@Entity(name = "Expenses")
 public class Expenses {
+
+    @Id
+    @SequenceGenerator(
+            name = "expenses_seq",
+            sequenceName = "expenses_seq",
+            allocationSize = 1
+    )
+    @GeneratedValue(
+            strategy = GenerationType.SEQUENCE,
+            generator = "expenses_seq"
+    )
     private Long id;
 
     private String description;
@@ -28,10 +43,6 @@ public class Expenses {
     // Getters and Setters
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getDescription() {
