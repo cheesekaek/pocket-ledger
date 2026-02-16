@@ -1,9 +1,12 @@
-package com.example.pl;
+package com.example.pl.entity;
 
 import jakarta.persistence.*;
 import java.time.LocalDate;
 
 @Entity(name = "Expenses")
+@Table(
+        name = "expenses"
+)
 public class Expenses {
 
     @Id
@@ -16,14 +19,36 @@ public class Expenses {
             strategy = GenerationType.SEQUENCE,
             generator = "expenses_seq"
     )
+
+    @Column(
+            name="id",
+            updatable = false
+    )
     private Long id;
 
+    @Column(
+            name="description",
+            columnDefinition = "TEXT"
+    )
     private String description;
 
+    @Column(
+            name = "amount",
+            nullable = false
+    )
     private Double amount;
 
+    @Column(
+            name = "date",
+            nullable = false
+    )
     private LocalDate date;
 
+    @Column(
+            name = "category",
+            columnDefinition = "TEXT",
+            nullable = false
+    )
     private String category;
 
     public Expenses() {
