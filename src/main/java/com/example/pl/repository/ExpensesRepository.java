@@ -9,4 +9,5 @@ import java.util.List;
 
 @Repository
 public interface ExpensesRepository extends JpaRepository<Expenses, Long> {
+    // deletebyID in jpa
 }

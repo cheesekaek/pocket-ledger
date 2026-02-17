@@ -2,6 +2,7 @@ package com.example.pl.service;
 
 import com.example.pl.entity.Expenses;
 import com.example.pl.repository.ExpensesRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -9,11 +10,8 @@ import java.util.List;
 @Service
 public class ExpenseService {
 
-    private final ExpensesRepository expensesRepository;
-
-    public ExpenseService(ExpensesRepository expensesRepository) {
-        this.expensesRepository = expensesRepository;
-    }
+    @Autowired
+    private ExpensesRepository expensesRepository;
 
     public Expenses saveExpense(Expenses expense) {
         return expensesRepository.save(expense);
