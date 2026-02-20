@@ -1,6 +1,7 @@
 package com.example.pl.service;
 
 import com.example.pl.entity.Expenses;
+import com.example.pl.exception.IdNotFound;
 import com.example.pl.repository.ExpensesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,12 +29,12 @@ public class ExpensesService {
             expense.setDate(updatedExpense.getDate());
             expense.setCategory(updatedExpense.getCategory());
             return expensesRepository.save(expense);
-        }).orElseThrow(() -> new RuntimeException("The id " + id + " does not exist."));
+        }).orElseThrow(() -> new IdNotFound(id));
     }
 
     public void deleteExpense(Long id) {
         if (!expensesRepository.existsById(id)) {
-            throw new RuntimeException("The id " + id + " does not exist.");
+            throw new IdNotFound(id);
         }
         expensesRepository.deleteById(id);
     }
