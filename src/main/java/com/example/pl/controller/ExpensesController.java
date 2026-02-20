@@ -1,7 +1,7 @@
 package com.example.pl.controller;
 
 import com.example.pl.dto.ExpensesDto;
-import com.example.pl.dto.ExpensesMapper;
+import com.example.pl.mapper.ExpensesMapper;
 import com.example.pl.entity.Expenses;
 import com.example.pl.service.ExpensesService;
 import jakarta.validation.Valid;
