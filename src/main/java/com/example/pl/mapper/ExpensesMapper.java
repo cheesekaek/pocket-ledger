@@ -1,5 +1,6 @@
-package com.example.pl.dto;
+package com.example.pl.mapper;
 
+import com.example.pl.dto.ExpensesDto;
 import com.example.pl.entity.Expenses;
 import org.springframework.stereotype.Component;
 
