@@ -8,17 +8,17 @@ import java.time.LocalDate;
 
 public class ExpensesDto {
 
-    @NotBlank
+    @NotBlank(message = "The description must not be blank.")
     private String description;
 
-    @NotNull
-    @PositiveOrZero
+    @NotNull(message = "The amount must not be null.")
+    @PositiveOrZero(message = "The amount cannot be negative.")
     private Double amount;
 
-    @NotNull
+    @NotNull(message = "The date must not be null.")
     private LocalDate date;
 
-    @NotBlank
+    @NotBlank(message = "The category must not be blank.")
     private String category;
 
     public Double getAmount() {
