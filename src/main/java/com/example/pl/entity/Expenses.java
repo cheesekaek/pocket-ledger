@@ -26,7 +26,8 @@ public class Expenses {
 
     @Column(
             name="description",
-            columnDefinition = "TEXT"
+            columnDefinition = "TEXT",
+            nullable = false
     )
     private String description;
 
