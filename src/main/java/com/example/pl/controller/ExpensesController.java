@@ -1,40 +1,57 @@
 package com.example.pl.controller;
 
+import com.example.pl.dto.ExpensesDto;
+import com.example.pl.dto.ExpensesMapper;
 import com.example.pl.entity.Expenses;
-import com.example.pl.service.ExpenseService;
+import com.example.pl.service.ExpensesService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/expenses")
+@RequestMapping("/api/expenses")
 public class ExpensesController {
 
     @Autowired
-    private ExpenseService expenseService;
+    private ExpensesService expensesService;
+
+    @Autowired
+    private ExpensesMapper expensesMapper;
 
     @PostMapping
-    public Expenses createExpense(@RequestBody Expenses expense) {
-        return expenseService.saveExpense(expense);
+    public ResponseEntity<ExpensesDto> createExpense(@Valid @RequestBody ExpensesDto dto) {
+        // convert to entity
+        Expenses expense = expensesMapper.toExpEntity(dto);
+        // save entity in service
+        Expenses saved = expensesService.saveExpense(expense);
+        // convert back to dto
+        return ResponseEntity.ok(expensesMapper.toExpDto(saved));
     }
 
     @GetMapping
-    public List<Expenses> getAllExpenses() {
-        return expenseService.getAllExpenses();
+    public ResponseEntity<List<ExpensesDto>> getAllExpenses() {
+        // list of entities
+        List<Expenses> expensesList = expensesService.getAllExpenses();
+        // list of dtos
+        List<ExpensesDto> expensesDtoList = expensesList.stream().map(expensesMapper::toExpDto).toList();
+        // return the latter
+        return ResponseEntity.ok(expensesDtoList);
     }
 
     @PutMapping("/{id}")
-    public Expenses updateExpense(@PathVariable Long id, @RequestBody Expenses expense) {
-        return expenseService.updateExpense(id, expense);
+    public ResponseEntity<ExpensesDto> updateExpense(@PathVariable Long id, @Valid @RequestBody ExpensesDto dto) {
+        Expenses expense = expensesMapper.toExpEntity(dto);
+        Expenses updated = expensesService.updateExpense(id, expense);
+        return ResponseEntity.ok(expensesMapper.toExpDto(updated));
     }
 
     @DeleteMapping("/{id}")
-    public void deleteExpense(@PathVariable Long id) {
-        expenseService.deleteExpense(id);
+    public ResponseEntity<Void> deleteExpense(@PathVariable Long id) {
+        expensesService.deleteExpense(id);
+        return ResponseEntity.noContent().build();
     }
-
-
-
 
 }
