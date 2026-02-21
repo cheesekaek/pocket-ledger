@@ -9,5 +9,6 @@ import java.util.List;
 
 @Repository
 public interface ExpensesRepository extends JpaRepository<Expenses, Long> {
-    // deletebyID in jpa
+    List<Expenses> findByDescription(String description);
+    List<Expenses> findByCategory(String category);
 }

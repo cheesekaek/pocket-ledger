@@ -22,6 +22,10 @@ public class ExpensesService {
         return expensesRepository.findAll();
     }
 
+    public List<Expenses> getExpensesByCategory(String category) { return expensesRepository.findByCategory(category); }
+
+    public List<Expenses> getExpensesByDescription(String description) { return expensesRepository.findByDescription(description); }
+
     public Expenses updateExpense(Long id, Expenses updatedExpense) {
         return expensesRepository.findById(id).map(expense -> {
             expense.setDescription(updatedExpense.getDescription());

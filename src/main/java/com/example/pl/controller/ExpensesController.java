@@ -41,6 +41,20 @@ public class ExpensesController {
         return ResponseEntity.ok(expensesDtoList);
     }
 
+    @GetMapping
+    public ResponseEntity<List<ExpensesDto>> getExpensesByDescription(String description) {
+        List<Expenses> expensesList = expensesService.getExpensesByDescription(description);
+        List<ExpensesDto> expensesDtoList = expensesList.stream().map(expensesMapper::toExpDto).toList();
+        return ResponseEntity.ok(expensesDtoList);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<ExpensesDto>> getExpensesByCategory(String category) {
+        List<Expenses> expensesList = expensesService.getExpensesByCategory(category);
+        List<ExpensesDto> expensesDtoList = expensesList.stream().map(expensesMapper::toExpDto).toList();
+        return ResponseEntity.ok(expensesDtoList);
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<ExpensesDto> updateExpense(@PathVariable Long id, @Valid @RequestBody ExpensesDto dto) {
         Expenses expense = expensesMapper.toExpEntity(dto);
