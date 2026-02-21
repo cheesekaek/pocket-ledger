@@ -11,4 +11,7 @@ import java.util.List;
 public interface ExpensesRepository extends JpaRepository<Expenses, Long> {
     List<Expenses> findByDescription(String description);
     List<Expenses> findByCategory(String category);
+
+    List<Expenses> findByDate(LocalDate date);
+    List<Expenses> findByDateBetween(LocalDate dateAfter, LocalDate dateBefore);
 }
