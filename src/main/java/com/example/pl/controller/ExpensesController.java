@@ -1,18 +1,17 @@
 package com.example.pl.controller;
 
 import com.example.pl.dto.ExpensesDto;
-import com.example.pl.exception.InvalidInput;
 import com.example.pl.mapper.ExpensesMapper;
 import com.example.pl.entity.Expenses;
 import com.example.pl.service.ExpensesService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.time.LocalDate;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/expenses")
@@ -35,56 +34,26 @@ public class ExpensesController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ExpensesDto>> getAllExpenses() {
-        // list of entities
-        List<Expenses> expensesList = expensesService.getAllExpenses();
-        // list of dtos
-        List<ExpensesDto> expensesDtoList = expensesList.stream().map(expensesMapper::toExpDto).toList();
-        // return the latter
-        return ResponseEntity.ok(expensesDtoList);
-    }
-
-    @GetMapping
-    public ResponseEntity<List<ExpensesDto>> getExpensesByDescription(String description) {
-        List<Expenses> expensesList = expensesService.getExpensesByDescription(description);
-        List<ExpensesDto> expensesDtoList = expensesList.stream().map(expensesMapper::toExpDto).toList();
-        return ResponseEntity.ok(expensesDtoList);
-    }
-
-    @GetMapping
-    public ResponseEntity<List<ExpensesDto>> getExpensesByCategory(String category) {
-        List<Expenses> expensesList = expensesService.getExpensesByCategory(category);
-        List<ExpensesDto> expensesDtoList = expensesList.stream().map(expensesMapper::toExpDto).toList();
-        return ResponseEntity.ok(expensesDtoList);
-    }
-
-    @GetMapping
-    public ResponseEntity<List<ExpensesDto>> getExpensesByDate(
-            @RequestParam (required = false)
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) // conversion from string to date
-            LocalDate dateAfter,
-
-            @RequestParam (required = false)
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-            LocalDate dateBefore,
-
-            @RequestParam (required = false)
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-            LocalDate date) {
-
-        List<Expenses> expensesList;
-        if (dateAfter != null && dateBefore != null && date == null) {
-            expensesList = expensesService.getExpensesByDateBetween(dateAfter, dateBefore);
-        } else if (date != null && dateAfter == null && dateBefore == null) {
-            expensesList = expensesService.getExpensesByDate(date);
-        } else if (date != null || dateAfter != null || dateBefore != null) {
-            throw new InvalidInput("Either [ both 'dateAfter' and 'dateBefore' ] OR " +
-                    "[ 'date' ] must be provided.");
-        } else {
-            expensesList = expensesService.getAllExpenses();
-        }
-        List<ExpensesDto> expensesDtoList = expensesList.stream().map(expensesMapper::toExpDto).toList();
-        return ResponseEntity.ok(expensesDtoList);
+    public ResponseEntity<Page<ExpensesDto>> getAllExpenses(@RequestParam (required = false)
+                                                                String description, // filter by desc
+                                                            @RequestParam (required = false)
+                                                                String category, // filter by category
+                                                            @RequestParam (required = false)
+                                                                @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) // conversion from string to date
+                                                                LocalDate dateAfter, // filter by b/w dates
+                                                            @RequestParam (required = false)
+                                                                @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+                                                                LocalDate dateBefore,
+                                                            @RequestParam (required = false)
+                                                                @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+                                                                LocalDate date, // filter by date
+                                                            Pageable pageable) {
+        // entities
+        Page<Expenses> expensesPage = expensesService.getAllExpenses(description, category, dateAfter, dateBefore, date, pageable);
+        // to dto
+        Page<ExpensesDto> expensesDtoPage = expensesPage.map(expensesMapper::toExpDto);
+        // return dto page
+        return ResponseEntity.ok(expensesDtoPage);
     }
 
     @PutMapping("/{id}")

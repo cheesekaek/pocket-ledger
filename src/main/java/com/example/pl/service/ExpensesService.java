@@ -4,11 +4,15 @@ import com.example.pl.entity.Expenses;
 import com.example.pl.exception.IdNotFound;
 import com.example.pl.exception.InvalidInput;
 import com.example.pl.repository.ExpensesRepository;
+import com.example.pl.specification.ExpensesSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+
 import java.time.LocalDate;
-import java.util.List;
 
 @Service
 public class ExpensesService {
@@ -20,39 +24,35 @@ public class ExpensesService {
         return expensesRepository.save(expense);
     }
 
-    public List<Expenses> getAllExpenses() {
-        return expensesRepository.findAll();
-    }
-
-    public List<Expenses> getExpensesByCategory(String category) {
-        if (category == null) {
-            throw new InvalidInput("The category must be provided.");
+    public Page<Expenses> getAllExpenses(String description, // filters
+                                      String category,
+                                      LocalDate dateAfter,
+                                      LocalDate dateBefore,
+                                      LocalDate date,
+                                      Pageable pageable) {
+        Specification<Expenses> spec = (root, query, criteriaBuilder) ->
+                criteriaBuilder.conjunction();
+        // optional filters
+        if (description != null) {
+            spec = spec.and(ExpensesSpecification.hasDesc(description));
         }
-        return expensesRepository.findByCategory(category);
-    }
-
-    public List<Expenses> getExpensesByDescription(String description) {
-        if (description == null) {
-            throw new InvalidInput("The description must be provided.");
+        if (category != null) {
+            spec = spec.and(ExpensesSpecification.hasCategory(category));
         }
-        return expensesRepository.findByDescription(description);
-    }
-
-    public List<Expenses> getExpensesByDate(LocalDate date) {
-        if (date == null) {
-            throw new InvalidInput("The date must be provided.");
+        if (date != null) {
+            spec = spec.and(ExpensesSpecification.hasDate(date));
         }
-        return expensesRepository.findByDate(date);
-    }
-
-    public List<Expenses> getExpensesByDateBetween(LocalDate dateAfter, LocalDate dateBefore) {
-        if (dateAfter == null || dateBefore == null) {
-            throw new InvalidInput("Both limits of the date range must be provided.");
+        if (dateAfter != null || dateBefore != null) {
+            // invalid param check
+            if (dateAfter == null || dateBefore == null) {
+                throw new InvalidInput("Both limits of the date range must be provided.");
+            }
+            if (dateAfter.isAfter(dateBefore)) {
+                throw new InvalidInput("The start date cannot be after the end date.");
+            }
+            spec = spec.and(ExpensesSpecification.hasDates(dateAfter, dateBefore));
         }
-        if (dateAfter.isAfter(dateBefore)) {
-            throw new InvalidInput("The start date cannot be after the end date.");
-        }
-        return expensesRepository.findByDateBetween(dateAfter, dateBefore);
+        return expensesRepository.findAll(spec, pageable);
     }
 
     public Expenses updateExpense(Long id, Expenses updatedExpense) {
