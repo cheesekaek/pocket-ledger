@@ -1,8 +1,15 @@
 package com.example.pl.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+
 import java.time.LocalDate;
 
+@Builder // for test
+@Data  // getters , setters
+@AllArgsConstructor // for test
 @Entity(name = "Expenses")
 @Table(name = "expenses")
 public class Expenses {
@@ -50,8 +57,7 @@ public class Expenses {
     )
     private String category;
 
-    public Expenses() {
-    }
+    public Expenses() {}
 
     public Expenses(
             String description,
@@ -61,43 +67,6 @@ public class Expenses {
         this.description = description;
         this.amount = amount;
         this.date = date;
-        this.category = category;
-    }
-
-    // Getters and Setters
-    public Long getId() {
-        return id;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Double getAmount() {
-        return amount;
-    }
-
-    public void setAmount(Double amount) {
-        this.amount = amount;
-    }
-
-    public LocalDate getDate() {
-        return date;
-    }
-
-    public void setDate(LocalDate date) {
-        this.date = date;
-    }
-
-    public String getCategory() {
-        return category;
-    }
-
-    public void setCategory(String category) {
         this.category = category;
     }
 }
