@@ -1,4 +1,4 @@
-package com.example.pocketledger;
+package com.example.pocketledger.application;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
