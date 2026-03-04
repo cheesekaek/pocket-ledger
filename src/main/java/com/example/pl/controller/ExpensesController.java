@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
@@ -30,7 +31,7 @@ public class ExpensesController {
         // save entity in service
         Expenses saved = expensesService.saveExpense(expense);
         // convert back to dto
-        return ResponseEntity.ok(expensesMapper.toExpDto(saved));
+        return ResponseEntity.status(HttpStatus.CREATED).body(expensesMapper.toExpDto(saved));
     }
 
     @GetMapping
