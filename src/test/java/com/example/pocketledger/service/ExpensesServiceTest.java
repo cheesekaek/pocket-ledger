@@ -202,7 +202,6 @@ public class ExpensesServiceTest {
     @Test
     public void ExpensesService_WithValidId_DeleteExpense() {
         when(expensesRepository.existsById(1L)).thenReturn(true);
-        doNothing().when(expensesRepository).deleteById(1L); // no return since void
 
         expensesService.deleteExpense(1L);
 
