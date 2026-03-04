@@ -39,10 +39,10 @@ public class ExpensesService {
         if (category != null) {
             spec = spec.and(ExpensesSpecification.hasCategory(category));
         }
+        // date takes priority over date range
         if (date != null) {
             spec = spec.and(ExpensesSpecification.hasDate(date));
-        }
-        if (dateAfter != null || dateBefore != null) {
+        } else if (dateAfter != null || dateBefore != null) {
             // invalid param check
             if (dateAfter == null || dateBefore == null) {
                 throw new InvalidInput("Both limits of the date range must be provided.");
