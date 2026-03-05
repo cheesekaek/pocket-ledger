@@ -5,7 +5,6 @@ import com.kaek.pl.exception.IdNotFound;
 import com.kaek.pl.exception.InvalidInput;
 import com.kaek.pl.repository.ExpensesRepository;
 import com.kaek.pl.repository.ExpensesSpecification;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -17,8 +16,11 @@ import java.time.LocalDate;
 @Service
 public class ExpensesService {
 
-    @Autowired
-    private ExpensesRepository expensesRepository;
+    private final ExpensesRepository expensesRepository;
+
+    public ExpensesService(ExpensesRepository expensesRepository) {
+        this.expensesRepository = expensesRepository;
+    }
 
     public Expenses saveExpense(Expenses expense) {
         return expensesRepository.save(expense);

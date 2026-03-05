@@ -5,7 +5,6 @@ import com.kaek.pl.domain.mapper.ExpensesMapper;
 import com.kaek.pl.domain.entity.Expenses;
 import com.kaek.pl.service.ExpensesService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -18,11 +17,14 @@ import java.time.LocalDate;
 @RequestMapping("/api/expenses")
 public class ExpensesController {
 
-    @Autowired
-    private ExpensesService expensesService;
+    private final ExpensesService expensesService;
 
-    @Autowired
-    private ExpensesMapper expensesMapper;
+    private final ExpensesMapper expensesMapper;
+
+    public ExpensesController(ExpensesService expensesService, ExpensesMapper expensesMapper) {
+        this.expensesService = expensesService;
+        this.expensesMapper = expensesMapper;
+    }
 
     @PostMapping
     public ResponseEntity<ExpensesDto> createExpense(@Valid @RequestBody ExpensesDto dto) {

@@ -95,7 +95,7 @@ public class ExpensesServiceTest {
     @Test
     public void ExpensesService_DescFilter_getAllExpensesWithDesc() {
         Page<Expenses> page = new PageImpl<>(List.of(sampleExpense));
-        when(expensesRepository.findAll(any(Specification.class), any(Pageable.class))).thenReturn(page);
+        when(expensesRepository.findAll(any((Specification.class)), any(Pageable.class))).thenReturn(page);
 
         Page<Expenses> result = expensesService.getAllExpenses(
                 "Lunch", null, null, null, null, pageable
