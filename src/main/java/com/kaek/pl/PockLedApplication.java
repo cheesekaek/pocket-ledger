@@ -1,6 +1,6 @@
-package com.example.pl;
+package com.kaek.pl;
 
-import com.example.pl.repository.ExpensesRepository;
+import com.kaek.pl.repository.ExpensesRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

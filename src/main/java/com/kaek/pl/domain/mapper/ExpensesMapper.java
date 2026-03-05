@@ -1,7 +1,7 @@
-package com.example.pl.mapper;
+package com.kaek.pl.domain.mapper;
 
-import com.example.pl.dto.ExpensesDto;
-import com.example.pl.entity.Expenses;
+import com.kaek.pl.domain.dto.ExpensesDto;
+import com.kaek.pl.domain.entity.Expenses;
 import org.springframework.stereotype.Component;
 
 @Component

@@ -1,10 +1,10 @@
-package com.example.pl.service;
+package com.kaek.pl.service;
 
-import com.example.pl.entity.Expenses;
-import com.example.pl.exception.IdNotFound;
-import com.example.pl.exception.InvalidInput;
-import com.example.pl.repository.ExpensesRepository;
-import com.example.pl.specification.ExpensesSpecification;
+import com.kaek.pl.domain.entity.Expenses;
+import com.kaek.pl.exception.IdNotFound;
+import com.kaek.pl.exception.InvalidInput;
+import com.kaek.pl.repository.ExpensesRepository;
+import com.kaek.pl.repository.ExpensesSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

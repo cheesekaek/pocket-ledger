@@ -1,10 +1,10 @@
-package com.example.pocketledger.service;
+package com.kaek.pocketledger.service;
 
-import com.example.pl.entity.Expenses;
-import com.example.pl.exception.IdNotFound;
-import com.example.pl.exception.InvalidInput;
-import com.example.pl.repository.ExpensesRepository;
-import com.example.pl.service.ExpensesService;
+import com.kaek.pl.domain.entity.Expenses;
+import com.kaek.pl.exception.IdNotFound;
+import com.kaek.pl.exception.InvalidInput;
+import com.kaek.pl.repository.ExpensesRepository;
+import com.kaek.pl.service.ExpensesService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

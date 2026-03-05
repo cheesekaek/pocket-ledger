@@ -1,9 +1,9 @@
-package com.example.pl.controller;
+package com.kaek.pl.controller;
 
-import com.example.pl.dto.ExpensesDto;
-import com.example.pl.mapper.ExpensesMapper;
-import com.example.pl.entity.Expenses;
-import com.example.pl.service.ExpensesService;
+import com.kaek.pl.domain.dto.ExpensesDto;
+import com.kaek.pl.domain.mapper.ExpensesMapper;
+import com.kaek.pl.domain.entity.Expenses;
+import com.kaek.pl.service.ExpensesService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

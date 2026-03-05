@@ -1,6 +1,6 @@
-package com.example.pl.specification;
+package com.kaek.pl.repository;
 
-import com.example.pl.entity.Expenses;
+import com.kaek.pl.domain.entity.Expenses;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.time.LocalDate;

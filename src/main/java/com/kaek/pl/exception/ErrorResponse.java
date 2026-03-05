@@ -1,4 +1,4 @@
-package com.example.pl.exception;
+package com.kaek.pl.exception;
 
 public class ErrorResponse {
     private int code;
