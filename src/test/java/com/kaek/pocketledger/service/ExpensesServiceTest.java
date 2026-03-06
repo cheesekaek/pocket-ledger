@@ -79,6 +79,7 @@ public class ExpensesServiceTest {
     // ======================= get expenses =======================
     // no filters
     @Test
+    @SuppressWarnings("unchecked")
     public void ExpensesService_NoFilters_getAllExpenses() {
         Page<Expenses> page = new PageImpl<>(List.of(sampleExpense));
         when(expensesRepository.findAll(any(Specification.class), any(Pageable.class))).thenReturn(page);
@@ -93,6 +94,7 @@ public class ExpensesServiceTest {
 
     // desc filter
     @Test
+    @SuppressWarnings("unchecked")
     public void ExpensesService_DescFilter_getAllExpensesWithDesc() {
         Page<Expenses> page = new PageImpl<>(List.of(sampleExpense));
         when(expensesRepository.findAll(any((Specification.class)), any(Pageable.class))).thenReturn(page);
@@ -107,6 +109,7 @@ public class ExpensesServiceTest {
 
     // valid date range
     @Test
+    @SuppressWarnings("unchecked")
     public void ExpensesService_ValidDateRangeFilter_getAllExpensesWithinRange() {
         Page<Expenses> page = new PageImpl<>(List.of(sampleExpense));
         when(expensesRepository.findAll(any(Specification.class), any(Pageable.class))).thenReturn(page);
@@ -123,6 +126,7 @@ public class ExpensesServiceTest {
 
     // invalid date range
     @Test
+    @SuppressWarnings("unchecked")
     public void ExpensesService_OnlyDateAfter_ThrowInvalid() {
         assertThatThrownBy(() -> expensesService.getAllExpenses(
                 null, null, LocalDate.of(2026, 3, 1),
@@ -133,6 +137,7 @@ public class ExpensesServiceTest {
     }
 
     @Test
+    @SuppressWarnings("unchecked")
     public void ExpensesService_OnlyDateBefore_ThrowInvalid() {
         assertThatThrownBy(() -> expensesService.getAllExpenses(
                 null, null, null,
@@ -143,6 +148,7 @@ public class ExpensesServiceTest {
     }
 
     @Test
+    @SuppressWarnings("unchecked")
     public void ExpensesService_InvertedDateRange_ThrowInvalid() {
         assertThatThrownBy(() -> expensesService.getAllExpenses(
                 null, null, LocalDate.of(2026, 4, 4),
@@ -155,6 +161,7 @@ public class ExpensesServiceTest {
 
     // date priority over date range
     @Test
+    @SuppressWarnings("unchecked")
     public void ExpensesService_BothDateAndDateRange_getAllExpensesWithDate() {
         Page<Expenses> page = new PageImpl<>(List.of(sampleExpense));
         when(expensesRepository.findAll(any(Specification.class), any(Pageable.class))).thenReturn(page);
