@@ -1,4 +1,4 @@
-package com.kaek.pocketledger.mapper;
+package com.kaek.pl.mapper;
 
 import com.kaek.pl.domain.dto.ExpensesDto;
 import com.kaek.pl.domain.entity.Expenses;
@@ -15,6 +15,8 @@ public class ExpensesMapperTest {
     private ExpensesMapper expensesMapper = new ExpensesMapper();
 
     private Expenses expense;
+    private ExpensesDto expensesDto;
+
     @BeforeEach
     public void setSampleEntity() {
         expense = Expenses.builder()
@@ -23,11 +25,7 @@ public class ExpensesMapperTest {
                 .amount(22.50)
                 .date(LocalDate.of(2026,3,3))
                 .build();
-    }
 
-    private ExpensesDto expensesDto;
-    @BeforeEach
-    public void setSampleDto() {
         expensesDto = ExpensesDto.builder()
                 .description("Lunch")
                 .category("Food")
