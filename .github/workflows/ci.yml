@@ -1,0 +1,43 @@
+name: Pocket Ledger CI
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses:
+          actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Run Maven Tests
+        run: mvn clean verify site
+
+      - name: Upload JUnit Test Results
+        if: always()
+        uses: actions/upload-artifact@v4 # Updated to v4
+        with:
+          name: junit-reports
+          path: target/surefire-reports/*.xml
+
+      - name: Upload HTML Test Reports
+        if: always()
+        uses: actions/upload-artifact@v4 # Updated to v4
+        with:
+          name: html-test-reports
+          path: target/site/
+
+
+
