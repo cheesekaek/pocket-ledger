@@ -1,4 +1,4 @@
-package com.kaek.pocketledger.application;
+package com.kaek.pl;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
