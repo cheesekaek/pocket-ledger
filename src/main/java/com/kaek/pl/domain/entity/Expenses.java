@@ -1,15 +1,12 @@
 package com.kaek.pl.domain.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDate;
 
-@Builder // for test
 @Data  // getters , setters
-@AllArgsConstructor // for test
 @Entity(name = "Expenses")
 @Table(name = "expenses")
 public class Expenses {
@@ -60,6 +57,19 @@ public class Expenses {
     public Expenses() {}
 
     public Expenses(
+            String description,
+            Double amount,
+            LocalDate date,
+            String category) {
+        this.description = description;
+        this.amount = amount;
+        this.date = date;
+        this.category = category;
+    }
+
+    @Builder // test
+    public Expenses(
+            Long id,
             String description,
             Double amount,
             LocalDate date,
