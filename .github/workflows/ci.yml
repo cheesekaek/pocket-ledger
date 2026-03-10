@@ -1,9 +1,9 @@
 name: Pocket Ledger CI
 on:
   push:
-    branches: [ main ]
+    branches: [ master ]
   pull_request:
-    branches: [ main ]
+    branches: [ master ]
 
 jobs:
   build:
@@ -12,8 +12,7 @@ jobs:
 
     steps:
       - name: Checkout Code
-        uses:
-          actions/checkout@v4
+        uses: actions/checkout@v4
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
@@ -37,7 +36,7 @@ jobs:
         uses: actions/upload-artifact@v4 # Updated to v4
         with:
           name: html-test-reports
-          path: target/site/
+          path: target/site/**/*
 
 
 
