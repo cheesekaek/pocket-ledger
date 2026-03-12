@@ -3,9 +3,13 @@ package com.kaek.pl.controller;
 import com.kaek.pl.domain.dto.ExpensesDto;
 import com.kaek.pl.domain.mapper.ExpensesMapper;
 import com.kaek.pl.domain.entity.Expenses;
+import com.kaek.pl.exception.ErrorResponse;
 import com.kaek.pl.service.ExpensesService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -32,12 +36,22 @@ public class ExpensesController {
         this.expensesMapper = expensesMapper;
     }
 
+    // =========================== POST ===========================
     @Operation(summary = "Creates a new expense",
-            description = "Requires a valid request body (description, category, amount, and date)." +
+            description = "Requires a valid request body (description, amount, date, category)." +
                     " Returns the created expense")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Created successfully"),
-            @ApiResponse(responseCode = "400", description = "Invalid request body")
+            @ApiResponse(responseCode = "201", description = "Created successfully",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ExpensesDto.class))),
+            @ApiResponse(responseCode = "400", description = "Invalid request body",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = @ExampleObject(
+                                    value = "{\"code\": 400, \"message\": \"description: " +
+                                            "The description must not be blank. amount: The amount must not be null.\"}"
+                            )))
     })
     @PostMapping
     public ResponseEntity<ExpensesDto> createExpense(@Valid @RequestBody ExpensesDto dto) {
@@ -49,16 +63,29 @@ public class ExpensesController {
         return ResponseEntity.status(HttpStatus.CREATED).body(expensesMapper.toExpDto(saved));
     }
 
+    // =========================== GET ===========================
     @Operation(summary = "Retrieve expenses with optional filters",
-            description = "Returns a paginated list of expenses" +
-                    "All filters are optional and can be combined." +
-                    "Dates must be in ISO format (yyyy-MM-dd)." +
-                    "When using date range, dateAfter must be before or equal to dateBefore." +
+            description = "Returns a paginated list of expenses. All filters are optional and can be combined. " +
+                    "Dates must be in ISO format (yyyy-MM-dd). When using date range, dateAfter must be before or equal to dateBefore. " +
                     "If dateAfter and/or dateBefore are used with date, only date is considered as a filter.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Expenses retrieved successfully"),
+            @ApiResponse(responseCode = "200", description = "Expenses retrieved successfully",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = Page.class),
+                            examples = @ExampleObject(
+                                    value = "{\"content\": [{\"description\": \"Lunch\", \"amount\": 19.95, \"date\": " +
+                                            "\"2026-03-03\", \"category\": \"Food\"}], \"totalPages\": 1, \"totalElements\": 1, " +
+                                            "\"size\": 10, \"number\": 0, \"first\": true, \"last\": true}"
+                            ))),
             @ApiResponse(responseCode = "400", description = "Invalid date format, " +
-                    "only one date range limit provided, or dateAfter is after dateBefore")
+                    "only one date range limit provided, or dateAfter is after dateBefore",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = @ExampleObject(
+                                    value = "{\"code\": 400, \"message\": \"The start date cannot be after the end date.\"}"
+                            )))
     })
     @Parameter(name = "description", description = "Filter expenses by description", example = "Lunch")
     @Parameter(name = "category", description = "Filter expenses by category", example = "Food")
@@ -79,6 +106,7 @@ public class ExpensesController {
                                                             @RequestParam (required = false)
                                                                 @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
                                                                 LocalDate date, // filter by date
+                                                            @Parameter(hidden = true)
                                                             Pageable pageable) {
         // entities
         Page<Expenses> expensesPage = expensesService.getAllExpenses(description, category, dateAfter, dateBefore, date, pageable);
@@ -88,13 +116,32 @@ public class ExpensesController {
         return ResponseEntity.ok(expensesDtoPage);
     }
 
+    // =========================== PUT ===========================
     @Operation(summary = "Update expense by ID",
             description = "Updates an existing expense by ID. Requires a valid request body " +
-                    "(description, category, amount, and date). Returns the updated expense.")
+                    "(description, amount, date, category). Returns the updated expense.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Expense updated successfully"),
-            @ApiResponse(responseCode = "400", description = "Invalid request body"),
-            @ApiResponse(responseCode = "404", description = "Expense with ID cannot be found")
+            @ApiResponse(responseCode = "200",
+                    description = "Expense updated successfully",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ExpensesDto.class))),
+            @ApiResponse(responseCode = "400",
+                    description = "Invalid request body",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = @ExampleObject(
+                                    value = "{\"code\": 400, \"message\": \"description: " +
+                                            "The description must not be blank. amount: The amount must not be null.\"}"
+                            ))),
+            @ApiResponse(responseCode = "404",
+                    description = "Expense with ID cannot be found",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = @ExampleObject(
+                                    value = "{\"code\": 404, \"message\": \"The id 6 cannot be found\"}"
+                            )))
     })
     @PutMapping("/{id}")
     public ResponseEntity<ExpensesDto> updateExpense(
@@ -106,10 +153,19 @@ public class ExpensesController {
         return ResponseEntity.ok(expensesMapper.toExpDto(updated));
     }
 
+    // =========================== DELETE ===========================
     @Operation(summary = "Delete expense by ID", description = "Deletes an existing expense by ID.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Expense deleted successfully"),
-            @ApiResponse(responseCode = "404", description = "Expense with ID cannot be found")
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Expense with the given ID not found",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = @ExampleObject(
+                                    value = "{\"code\": 404, \"message\": \"The id 7 cannot be found\"}"
+                            )))
     })
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteExpense(
