@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDate;
 
+@SuppressWarnings("unused")
 public interface ExpensesControllerDocs {
 
 
