@@ -24,6 +24,25 @@ jobs:
       - name: Run Maven Tests
         run: mvn clean verify site
 
+      - name: Set Environment Var for DB
+        run: |
+          echo "POSTGRES_USER=testuser" >> $GITHUB_ENV
+          echo "POSTGRES_PASSWORD=testpass" >> $GITHUB_ENV
+          echo "POSTGRES_DB=testdb" >> $GITHUB_ENV
+
+      - name: Build Docker Image
+        run: docker build -t pocket-ledger .
+
+      - name: Start Containers
+        run: |
+          docker compose up -d
+          sleep 30
+          docker compose logs
+
+      - name: Stop Containers
+        if: always()
+        run: docker compose down
+
       - name: Upload JUnit Test Results
         if: always()
         uses: actions/upload-artifact@v4 # Updated to v4
